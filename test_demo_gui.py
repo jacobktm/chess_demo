@@ -112,7 +112,7 @@ def run_game(queue, stop_event, board_number, player_engines):
         save_game_to_pgn(game)
 
         # Save player profiles
-        save_player_profiles(player_profiles)
+        player_profiles.save()
 
 # Function to update the GUI board
 def update_gui_board(gui_board, board, images, square_size, white_player, black_player, white_profile, black_profile):
