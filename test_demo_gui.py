@@ -19,7 +19,7 @@ class PlayerProfiles():
     def __init__(self):
         with open("player_profiles.json", "r") as file:
             self.profiles = json.load(file)
-            self.player_names = list(self.profiles.keys())
+        self.player_names = list(self.profiles.keys())
 
     def save(self):
         with open("player_profiles.json", "w") as file:
@@ -27,6 +27,9 @@ class PlayerProfiles():
 
     def __getitem__(self, key):
         return self.profiles[key]
+
+    def __iter__(self):
+        return iter(self.player_names)
     
     def get_random_pairing(self):
         return random.sample(self.player_names, 2)
@@ -183,7 +186,6 @@ def save_game_to_pgn(game, filename="games.pgn"):
 def main():
     global root
     stockfish_path = "./.venv/bin/stockfish"  # Replace with the correct path to your Stockfish binary
-    players = list(player_profiles.keys())
 
     # Initialize game counter and lock
     global game_counter
@@ -223,7 +225,7 @@ def main():
 
     # Create player engines
     player_engines = {}
-    for player in players:
+    for player in player_profiles:
         engine = chess.engine.SimpleEngine.popen_uci(stockfish_path)
         engine.configure({
             "UCI_LimitStrength": True,
