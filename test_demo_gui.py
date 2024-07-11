@@ -13,13 +13,15 @@ from datetime import datetime
 import random
 import json
 import os
+import traceback
 
 class PlayerProfiles():
-
     def __init__(self):
         with open("player_profiles.json", "r") as file:
             self.profiles = json.load(file)
         self.player_names = list(self.profiles.keys())
+
+    def initialize_images(self):
         for player, data in self.profiles.items():
             self.profiles[player]['image'] = ImageTk.PhotoImage(Image.open(f"images/{data['profile_image']}").resize((100, 100)))
 
@@ -35,7 +37,31 @@ class PlayerProfiles():
     
     def get_random_pairing(self):
         return random.sample(self.player_names, 2)
-    
+
+class PlayerEngine:
+    def __init__(self, name, stockfish_path):
+        self.name = name
+        self.engine = chess.engine.SimpleEngine.popen_uci(stockfish_path)
+        self.configure_engine()
+
+    def configure_engine(self):
+        profile = player_profiles[self.name]
+        try:
+            self.engine.configure({
+                "UCI_LimitStrength": True,
+                "UCI_Elo": max(profile["uci_elo"], 1320)
+            })
+            self.engine.protocol._isready()
+        except Exception as e:
+            print(f"Error configuring engine for player {self.name}: {e}")
+            traceback.print_exc()
+
+    def play(self, board, depth):
+        return self.engine.play(board, chess.engine.Limit(depth=depth)).move
+
+    def quit(self):
+        self.engine.quit()
+
 player_profiles = PlayerProfiles()
 
 # Function to update ELO ratings
@@ -93,16 +119,20 @@ def run_game(queue, stop_event, board_number, player_engines):
         game.headers["WhiteElo"] = str(white_elo_before)
         game.headers["BlackElo"] = str(black_elo_before)
 
-        ponder_move = None
-
-        while not board.is_game_over() and not stop_event.is_set():
-            if board.turn == chess.WHITE:
-                result = engine1.play(board, chess.engine.Limit(depth=player_profiles[white_player]["depth"]), info=chess.engine.INFO_PV, ponder=ponder_move)
-            else:
-                result = engine2.play(board, chess.engine.Limit(depth=player_profiles[black_player]["depth"]), info=chess.engine.INFO_PV, ponder=ponder_move)
-            board.push(result.move)
-            ponder_move = result.ponder if player_profiles[white_player]["ponder"] or player_profiles[black_player]["ponder"] else None
-            queue.put((board.copy(), white_player, black_player, board_number))
+        try:
+            while not board.is_game_over() and not stop_event.is_set():
+                if board.turn == chess.WHITE:
+                    result = engine1.play(board, player_profiles[white_player]["depth"])
+                else:
+                    result = engine2.play(board, player_profiles[black_player]["depth"])
+                board.push(result)
+                queue.put((board.copy(), white_player, black_player, board_number))
+        except chess.engine.EngineError as e:
+            print(f"Engine error on board {board_number}: {e}")
+            traceback.print_exc()
+        except Exception as e:
+            print(f"Unexpected error on board {board_number}: {e}")
+            traceback.print_exc()
 
         result = board.result(claim_draw=True)
         game.headers["Result"] = result
@@ -211,6 +241,9 @@ def main():
         frames.append(frame)
         gui_boards.append(gui_board)
 
+    # Initialize player profile images after the root is created
+    player_profiles.initialize_images()
+
     # Set up game queue and stop event
     queue = Queue()
     stop_event = threading.Event()
@@ -218,12 +251,7 @@ def main():
     # Create player engines
     player_engines = {}
     for player in player_profiles:
-        engine = chess.engine.SimpleEngine.popen_uci(stockfish_path)
-        engine.configure({
-            "UCI_LimitStrength": True,
-            "UCI_Elo": max(player_profiles[player]["uci_elo"], 1320)
-        })
-        player_engines[player] = engine
+        player_engines[player] = PlayerEngine(player, stockfish_path)
 
     # Start the game threads
     game_threads = []
@@ -250,4 +278,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
