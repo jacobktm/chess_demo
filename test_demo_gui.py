@@ -14,26 +14,24 @@ import random
 import json
 import os
 
-# Function to load player profiles from a JSON file
-def load_player_profiles():
-    if os.path.exists("player_profiles.json"):
+class PlayerProfiles():
+
+    def __init__(self):
         with open("player_profiles.json", "r") as file:
-            return json.load(file)
-    else:
-        return {
-            "Sir Checkmate The Bold": {"elo": 1200, "profile_image": "Sir_Checkmate_The_Bold.png", "depth": 20, "ponder": False, "uci_elo": 2000},
-            "Lady Gambit The Clever": {"elo": 1200, "profile_image": "Lady_Gambit_The_Clever.png", "depth": 10, "ponder": True, "uci_elo": 1800},
-            "Baron Rookslide The Swift": {"elo": 1200, "profile_image": "Baron_Rookslide_The_Swift.png", "depth": 15, "ponder": False, "uci_elo": 1600},
-            "Duchess Pawnmaster The Wise": {"elo": 1200, "profile_image": "Duchess_Pawnmaster_The_Wise.png", "depth": 5, "ponder": True, "uci_elo": 1400}
-        }
+            self.profiles = json.load(file)
+            self.player_names = list(self.profiles.keys())
 
-# Function to save player profiles to a JSON file
-def save_player_profiles(profiles):
-    with open("player_profiles.json", "w") as file:
-        json.dump(profiles, file)
+    def save(self):
+        with open("player_profiles.json", "w") as file:
+            json.dump(self.profiles, file)
 
-# Initial player profiles
-player_profiles = load_player_profiles()
+    def __getitem__(self, key):
+        return self.profiles[key]
+    
+    def get_random_pairing(self):
+        return random.sample(self.player_names, 2)
+
+player_profiles = PlayerProfiles()
 
 # Function to update ELO ratings
 def update_elo(player1, player2, result):
@@ -62,7 +60,7 @@ def run_game(queue, stop_event, board_number, player_engines):
             game_counter += 1
 
         # Randomize pairings and colors
-        player1, player2 = random.sample(players, 2)
+        player1, player2 = player_profiles.get_random_pairing()
 
         # Retrieve the pre-initialized engines for each player
         engine1 = player_engines[player1]
