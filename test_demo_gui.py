@@ -20,6 +20,8 @@ class PlayerProfiles():
         with open("player_profiles.json", "r") as file:
             self.profiles = json.load(file)
         self.player_names = list(self.profiles.keys())
+        for player, data in self.profiles.items():
+            self.profiles[player]['image'] = ImageTk.PhotoImage(Image.open(f"images/{data['profile_image']}").resize((100, 100)))
 
     def save(self):
         with open("player_profiles.json", "w") as file:
@@ -33,7 +35,7 @@ class PlayerProfiles():
     
     def get_random_pairing(self):
         return random.sample(self.player_names, 2)
-
+    
 player_profiles = PlayerProfiles()
 
 # Function to update ELO ratings
@@ -118,7 +120,7 @@ def run_game(queue, stop_event, board_number, player_engines):
         player_profiles.save()
 
 # Function to update the GUI board
-def update_gui_board(gui_board, board, images, square_size, white_player, black_player, white_profile, black_profile):
+def update_gui_board(gui_board, board, images, square_size, white_player, black_player):
     gui_board.delete("all")
     for i in range(8):
         for j in range(8):
@@ -142,22 +144,22 @@ def update_gui_board(gui_board, board, images, square_size, white_player, black_
     # Display player names, ELO ratings, and profile pictures
     gui_board.create_text(70, 15, text=split_name(black_player), font=("Arial", 10), fill="black")
     gui_board.create_text(70, 45, text=f"ELO: {int(player_profiles[black_player]['elo'])}", font=("Arial", 9), fill="black")
-    gui_board.create_image(70, 65, image=black_profile, anchor="n")
+    gui_board.create_image(70, 65, image=player_profiles[black_player]['image'], anchor="n")
 
-    gui_board.create_image(70, 415, image=white_profile, anchor="s")
+    gui_board.create_image(70, 415, image=player_profiles[white_player]['image'], anchor="s")
     gui_board.create_text(70, 435, text=f"ELO: {int(player_profiles[white_player]['elo'])}", font=("Arial", 9), fill="black")
     gui_board.create_text(70, 460, text=split_name(white_player), font=("Arial", 10), fill="black")
 
 # Function to process the queue and update the GUI
-def process_queue(queue, gui_boards, images, square_size, profiles, stop_event):
+def process_queue(queue, gui_boards, images, square_size, stop_event):
     try:
         while True:
             board, white_player, black_player, board_number = queue.get_nowait()
-            update_gui_board(gui_boards[board_number], board, images, square_size, white_player, black_player, profiles[white_player], profiles[black_player])
+            update_gui_board(gui_boards[board_number], board, images, square_size, white_player, black_player)
     except Empty:
         pass
     if not stop_event.is_set():
-        root.after(16, process_queue, queue, gui_boards, images, square_size, profiles, stop_event)
+        root.after(16, process_queue, queue, gui_boards, images, square_size, stop_event)
 
 # Load piece images
 def load_images(square_size):
@@ -168,13 +170,6 @@ def load_images(square_size):
         image = Image.open(filename)
         images[piece] = ImageTk.PhotoImage(image.resize((square_size, square_size)))
     return images
-
-# Load profile images
-def load_profiles():
-    profiles = {}
-    for player, data in player_profiles.items():
-        profiles[player] = ImageTk.PhotoImage(Image.open(f"images/{data['profile_image']}").resize((100, 100)))
-    return profiles
 
 # Function to save a single game to a PGN file
 def save_game_to_pgn(game, filename="games.pgn"):
@@ -204,9 +199,6 @@ def main():
 
     # Load piece images
     images = load_images(square_size)
-
-    # Load profile images
-    profiles = load_profiles()
 
     # Create GUI boards
     frames = []
@@ -241,7 +233,7 @@ def main():
         game_thread.start()
 
     # Start GUI update process
-    root.after(16, process_queue, queue, gui_boards, images, square_size, profiles, stop_event)
+    root.after(16, process_queue, queue, gui_boards, images, square_size, stop_event)
 
     # Handle window close event
     def on_closing():
