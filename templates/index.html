@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chess Demo</title>
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/css/chessboard-1.0.0.min.css" rel="stylesheet">
+  <link href="/static/css/styles.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="grid-container" id="boards-container">
+      {% for board in boards %}
+        {% include 'board.html' %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <script src="/static/js/jquery-3.7.1.min.js"></script>
+  <script src="/static/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/chessboard-1.0.0.min.js"></script>
+  <script src="/static/js/renderer.js"></script>
+</body>
+</html>
