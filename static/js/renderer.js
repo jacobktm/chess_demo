@@ -7,9 +7,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Initialize boards
   await initializeBoards();
-
-  // Adjust chessboard sizes on window resize
-  window.addEventListener('resize', adjustBoardSizes);
 });
 
 async function initializeBoards() {
@@ -30,7 +27,6 @@ async function initializeBoards() {
     boardContainer.className = 'board-container';
 
     boardContainer.innerHTML = `
-      <div class="profile-name-top">${board.games[0].player2.name}</div>
       <div class="d-flex align-items-center">
         <div class="profiles-container">
           <div class="profile profile-player2">
@@ -47,9 +43,12 @@ async function initializeBoards() {
             <img src="/img/profile_imgs/${board.games[0].player1.profile_image}" alt="${board.games[0].player1.name}" class="profile-image">
           </div>
         </div>
-        <div id="${boardElementId}" class="chess-board"></div>
+        <div class="board-frame">
+          <div class="profile-name-top">${board.games[0].player2.name}</div>
+          <div id="${boardElementId}" class="chess-board"></div>
+          <div class="profile-name-bottom">${board.games[0].player1.name}</div>
+        </div>
       </div>
-      <div class="profile-name-bottom">${board.games[0].player1.name}</div>
     `;
 
     boardsContainer.appendChild(boardContainer);
@@ -87,31 +86,6 @@ async function initializeBoards() {
     } else {
       console.error(`Board element not found for board ${board.id}`);
     }
-  });
-
-  adjustBoardSizes(); // Adjust board sizes after initializing
-}
-
-function adjustBoardSizes() {
-  const boardElements = document.querySelectorAll('.chess-board');
-  boardElements.forEach(boardElement => {
-    const containerWidth = (window.innerWidth / 2) - 100; // Adjust for profiles and spacing
-    boardElement.style.width = `${containerWidth}px`;
-    boardElement.style.height = `${containerWidth}px`;
-
-    const profilesContainer = boardElement.previousElementSibling;
-    profilesContainer.style.height = `${containerWidth}px`;
-
-    const profileImages = profilesContainer.querySelectorAll('.profile-image');
-    profileImages.forEach(image => {
-      image.style.width = `${containerWidth * 0.12}px`;  // Smaller profile image
-      image.style.height = `${containerWidth * 0.12}px`;  // Smaller profile image
-    });
-
-    const profileInfos = profilesContainer.querySelectorAll('.profile-info');
-    profileInfos.forEach(info => {
-      info.style.fontSize = `${containerWidth * 0.04}px`;  // Smaller font size
-    });
   });
 }
 

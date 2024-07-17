@@ -7,20 +7,26 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 45%; /* Adjust as necessary */
+  width: 100%; /* Adjust as necessary */
 }
 
 .profiles-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 30%;
+  width: 45%;
   padding-right: 1rem;
 }
 
+.board-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .profile-image {
-  width: 50px; /* Adjust as necessary */
-  height: 50px; /* Adjust as necessary */
+  width: 75px; /* Adjust as necessary */
+  height: 75px; /* Adjust as necessary */
   object-fit: cover;
   border-radius: 50%;
 }
@@ -31,7 +37,7 @@ body {
 }
 
 .chess-board {
-  width: 70%; /* Adjust as necessary */
+  width: 100%; /* Adjust as necessary */
   height: auto;
   margin: 0 auto;
 }
@@ -39,6 +45,6 @@ body {
 .profile-name-top,
 .profile-name-bottom {
   text-align: center;
-  margin: 0.5rem 0;
+  margin: 0;
 }
 
