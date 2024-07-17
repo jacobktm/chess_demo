@@ -1,3 +1,18 @@
-<div class="grid-item">
-  <div id="board-{{ board.id }}" class="board-container"></div>
+<div class="col-md-6">
+  <div class="profile">
+    <img src="/img/profile_imgs/{{ player1.profile_image }}" alt="{{ player1.name }}" class="profile-image">
+    <div class="profile-info">
+      <h5>{{ player1.name }}</h5>
+      <p>ELO: {{ player1.elo }}</p>
+    </div>
+  </div>
+  <div class="profile">
+    <img src="/img/profile_imgs/{{ player2.profile_image }}" alt="{{ player2.name }}" class="profile-image">
+    <div class="profile-info">
+      <h5>{{ player2.name }}</h5>
+      <p>ELO: {{ player2.elo }}</p>
+    </div>
+  </div>
+  <div id="board-{{ game_id }}" class="chess-board"></div>
 </div>
+

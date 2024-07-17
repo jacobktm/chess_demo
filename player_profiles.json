@@ -1,6 +1,6 @@
 {
-    "Sir Checkmate The Bold": {"elo": 1200, "profile_image": "Sir_Checkmate_The_Bold.png", "depth": 20, "ponder": false, "uci_elo": 2000},
-    "Lady Gambit The Clever": {"elo": 1200, "profile_image": "Lady_Gambit_The_Clever.png", "depth": 10, "ponder": true, "uci_elo": 1800},
-    "Baron Rookslide The Swift": {"elo": 1200, "profile_image": "Baron_Rookslide_The_Swift.png", "depth": 15, "ponder": false, "uci_elo": 1600},
-    "Duchess Pawnmaster The Wise": {"elo": 1200, "profile_image": "Duchess_Pawnmaster_The_Wise.png", "depth": 5, "ponder": true, "uci_elo": 1400}
+    "Sir Checkmate The Bold": {"elo": 1200, "profile_image": "Sir_Checkmate_The_Bold.png", "depth": 20, "uci_elo": 2000},
+    "Lady Gambit The Clever": {"elo": 1200, "profile_image": "Lady_Gambit_The_Clever.png", "depth": 10, "uci_elo": 1800},
+    "Baron Rookslide The Swift": {"elo": 1200, "profile_image": "Baron_Rookslide_The_Swift.png", "depth": 15, "uci_elo": 1600},
+    "Duchess Pawnmaster The Wise": {"elo": 1200, "profile_image": "Duchess_Pawnmaster_The_Wise.png", "depth": 5, "uci_elo": 1400}
 }

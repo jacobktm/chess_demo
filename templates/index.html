@@ -10,10 +10,11 @@
 </head>
 <body>
   <div class="container">
-    <div class="grid-container" id="boards-container">
-      {% for board in boards %}
-        {% include 'board.html' %}
-      {% endfor %}
+    <div class="row" id="profiles-container">
+      <!-- Player profiles will be dynamically added here -->
+    </div>
+    <div class="row" id="boards-container">
+      <!-- Chess boards will be dynamically added here -->
     </div>
   </div>
 
@@ -23,3 +24,4 @@
   <script src="/static/js/renderer.js"></script>
 </body>
 </html>
+
