@@ -1,6 +1,48 @@
 {
-    "Sir Checkmate The Bold": {"elo": 1200, "profile_image": "Sir_Checkmate_The_Bold.png", "depth": 20, "uci_elo": 2000},
-    "Lady Gambit The Clever": {"elo": 1200, "profile_image": "Lady_Gambit_The_Clever.png", "depth": 10, "uci_elo": 1800},
-    "Baron Rookslide The Swift": {"elo": 1200, "profile_image": "Baron_Rookslide_The_Swift.png", "depth": 15, "uci_elo": 1600},
-    "Duchess Pawnmaster The Wise": {"elo": 1200, "profile_image": "Duchess_Pawnmaster_The_Wise.png", "depth": 5, "uci_elo": 1400}
+    "Sir Checkmate The Bold": {
+        "name": "Sir Checkmate The Bold",
+        "elo": 1168,
+        "profile_image": "Sir_Checkmate_The_Bold.png",
+        "uci_elo": 2000,
+        "opponents": {
+            "Lady Gambit The Clever": {
+                "games_played": 2
+            }
+        }
+    },
+    "Lady Gambit The Clever": {
+        "name": "Lady Gambit The Clever",
+        "elo": 1212,
+        "profile_image": "Lady_Gambit_The_Clever.png",
+        "uci_elo": 1800,
+        "opponents": {
+            "Duchess Pawnmaster The Wise": {
+                "games_played": 1
+            },
+            "Sir Checkmate The Bold": {
+                "games_played": 1
+            }
+        }
+    },
+    "Baron Rookslide The Swift": {
+        "name": "Baron Rookslide The Swift",
+        "elo": 1200,
+        "profile_image": "Baron_Rookslide_The_Swift.png",
+        "uci_elo": 1600,
+        "opponents": {}
+    },
+    "Duchess Pawnmaster The Wise": {
+        "name": "Duchess Pawnmaster The Wise",
+        "elo": 1213,
+        "profile_image": "Duchess_Pawnmaster_The_Wise.png",
+        "uci_elo": 1400,
+        "opponents": {
+            "Lady Gambit The Clever": {
+                "games_played": 5
+            },
+            "Sir Checkmate The Bold": {
+                "games_played": 1
+            }
+        }
+    }
 }

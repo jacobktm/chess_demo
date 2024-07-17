@@ -3,11 +3,18 @@ body {
   padding-top: 2rem; /* Space between top of the window and boards */
 }
 
+.boards-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .board-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%; /* Adjust as necessary */
+  width: 55%; /* Adjust as necessary */
 }
 
 .profiles-container {
@@ -37,7 +44,7 @@ body {
 }
 
 .chess-board {
-  width: 100%; /* Adjust as necessary */
+  width: 250px; /* Adjust as necessary */
   height: auto;
   margin: 0 auto;
 }

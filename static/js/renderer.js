@@ -1,3 +1,5 @@
+let intervalIds = [];
+
 document.addEventListener('DOMContentLoaded', async () => {
   console.log("Document loaded, starting games...");
 
@@ -20,6 +22,10 @@ async function initializeBoards() {
   // Clear existing boards and profiles
   const boardsContainer = document.getElementById('boards-container');
   boardsContainer.innerHTML = '';
+
+  // Clear all existing interval timers
+  intervalIds.forEach(id => clearInterval(id));
+  intervalIds = [];
 
   boards.forEach(board => {
     const boardElementId = `board-${board.id}`;
@@ -66,7 +72,7 @@ async function initializeBoards() {
       let endGameCounter = 0;
 
       // Update the board periodically
-      setInterval(async () => {
+      const intervalId = setInterval(async () => {
         const boardResponse = await fetch(`/get_board/${board.id}`);
         const boardData = await boardResponse.json();
         console.log(`Board ${board.id} state:`, boardData);
@@ -74,15 +80,17 @@ async function initializeBoards() {
 
         if (boardData.pgn.includes('[Result "1-0"]') || boardData.pgn.includes('[Result "0-1"]') || boardData.pgn.includes('[Result "1/2-1/2"]')) {
           endGameCounter++;
-          if (endGameCounter >= 20) { // 20 iterations of 250ms each = 5 seconds
+          if (endGameCounter >= 40) { // 20 iterations of 250ms each = 5 seconds
             console.log(`Starting a new game on board ${board.id}`);
             await fetch(`/start_game/${board.id}`, { method: 'POST' });
-            await initializeBoards();
+            initializeBoards(); // Reinitialize boards after starting a new game
           }
         } else {
           endGameCounter = 0; // Reset counter if game is still in progress
         }
-      }, 250); // Update every quarter second
+      }, 125); // Update every quarter second
+
+      intervalIds.push(intervalId);
     } else {
       console.error(`Board element not found for board ${board.id}`);
     }
