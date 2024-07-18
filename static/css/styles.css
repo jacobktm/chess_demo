@@ -58,7 +58,7 @@ body {
 .profile-info {
   text-align: center;
   margin: 0.25rem 0; /* Reduce margin */
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 .chess-board {
@@ -71,5 +71,5 @@ body {
 .profile-name-bottom {
   text-align: center;
   margin: 0;
-  font-size: .75rem;
+  font-size: .5rem;
 }
