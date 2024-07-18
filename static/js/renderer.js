@@ -20,7 +20,7 @@ async function initializeBoards() {
   console.log("Boards fetched:", boards);
 
   // Clear existing boards and profiles
-  const boardsContainer = document.getElementById('boards-container');
+  const boardsContainer = document.getElementById('boards-wrapper');
   boardsContainer.innerHTML = '';
 
   // Clear all existing interval timers
