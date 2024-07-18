@@ -31,13 +31,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: 0.25rem; /* Reduce space between profile and board */
+  margin-right: 0; /* Reduce space between profile and board */
   padding: 0;
-  padding-right: .25rem;
+  padding-right: .45rem;
 }
 
 .profile-gap {
-  height: 1rem; /* Adjust as necessary */
+  height: .8rem; /* Adjust as necessary */
 }
 
 .board-frame {
@@ -53,12 +53,14 @@ body {
   height: 60px; /* Adjust as necessary */
   object-fit: cover;
   border-radius: 50%;
+  align-self: center;
+  padding: 0;
 }
 
 .profile-info {
   text-align: center;
-  margin: 0.25rem 0; /* Reduce margin */
-  font-size: 1rem;
+  margin: 0; /* Reduce margin */
+  font-size: .85rem;
 }
 
 .chess-board {
@@ -71,5 +73,5 @@ body {
 .profile-name-bottom {
   text-align: center;
   margin: 0;
-  font-size: .75rem;
+  font-size: .85rem;
 }

@@ -62,6 +62,8 @@ async function initializeBoards() {
     if (boardElement) {
       const chessBoard = Chessboard(boardElementId, {
         draggable: false,
+        showNotation: false,
+        moveSpeed: 'fast',
         position: board.fen
       });
 
@@ -78,7 +80,7 @@ async function initializeBoards() {
 
         if (boardData.pgn.includes('[Result "1-0"]') || boardData.pgn.includes('[Result "0-1"]') || boardData.pgn.includes('[Result "1/2-1/2"]')) {
           endGameCounter++;
-          if (endGameCounter >= 40) { // 20 iterations of 250ms each = 5 seconds
+          if (endGameCounter >= 150) { // 20 iterations of 250ms each = 5 seconds
             console.log(`Starting a new game on board ${board.id}`);
             await fetch(`/start_game/${board.id}`, { method: 'POST' });
             initializeBoards(); // Reinitialize boards after starting a new game
@@ -86,7 +88,7 @@ async function initializeBoards() {
         } else {
           endGameCounter = 0; // Reset counter if game is still in progress
         }
-      }, 125); // Update every quarter second
+      }, 33); // Update every quarter second
 
       intervalIds.push(intervalId);
     } else {

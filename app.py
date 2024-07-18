@@ -5,13 +5,10 @@ import threading
 from datetime import datetime
 import math
 import time
-import logging
 import random
 import chess.pgn
 
 app = Flask(__name__, static_url_path='/static')
-
-logging.basicConfig(level=logging.DEBUG)
 
 PGN_FILE = "games.pgn"
 EVENT_NAME = "The Whimsical Chess Tournament"
@@ -24,6 +21,7 @@ class PlayerProfile:
         self.elo = profile_data["elo"]
         self.profile_image = profile_data["profile_image"]
         self.depth = profile_data.get("depth", 15)  # Provide a default value if depth is not in profile_data
+        self.time = profile_data.get("time", 0.1)
         self.uci_elo = profile_data.get("uci_elo", 1320)  # Provide a default value if uci_elo is not in profile_data
         self.stockfish_path = stockfish_path
         self.engine = self._spawn_engine()
@@ -45,19 +43,15 @@ class PlayerProfile:
 
     def add_game(self, game, color):
         self.games.append({"game": game, "color": color, "initial_elo": self.elo})
-        logging.debug(f"chess_demo: add_game: {self.name} Games: {self.games}")
 
     def remove_game(self, game):
         self.games = [g for g in self.games if g["game"] != game]
-        logging.debug(f"chess_demo: remove_game: {self.name} Games: {self.games}")
 
     def play_move(self, board, board_id):
         try:
-            result = self.engine.play(board, chess.engine.Limit(depth=self.depth, time=0.1))  # Added time limit of 0.1 seconds per move
-            logging.debug(f"chess_demo: {self.name} move: {result.move}, board: {board_id}")
+            result = self.engine.play(board, chess.engine.Limit(depth=self.depth, time=self.time))  # Added time limit of 0.1 seconds per move
             return result.move
         except Exception as e:
-            logging.error(f"chess_demo: Error playing move for {self.name}: {e}")
             return None
 
     def play_game(self, game_info):
@@ -69,50 +63,42 @@ class PlayerProfile:
             return
 
         with self.lock:
-            try:
-                if not board.is_game_over():
-                    move = self.play_move(board, game['board_id'])
-                    if move and board.is_legal(move):
-                        board.push(move)
-                        game["last_move_time"] = datetime.now().isoformat()
-                        game["turn"] = chess.BLACK if current_turn == chess.WHITE else chess.WHITE
-                    else:
-                        logging.warning(f"chess_demo: Illegal move or no move returned by {self.name} on board {game['board_id']}: {move}")
+            if not board.is_game_over():
+                move = self.play_move(board, game['board_id'])
+                if move and board.is_legal(move):
+                    board.push(move)
+                    game["last_move_time"] = datetime.now().isoformat()
+                    game["turn"] = chess.BLACK if current_turn == chess.WHITE else chess.WHITE
+            else:
+                self.remove_game(game)
+
+                # Update ELO based on game result
+                result = board.result()
+                if result == '1-0':
+                    winner, loser = game["player1"], game["player2"]
+                    winner_result, loser_result = 1, 0
+                elif result == '0-1':
+                    winner, loser = game["player2"], game["player1"]
+                    winner_result, loser_result = 1, 0
                 else:
-                    logging.info(f"chess_demo: Game on board {game['board_id']} is over.")
-                    self.remove_game(game)
+                    winner, loser = game["player1"], game["player2"]
+                    winner_result, loser_result = 0.5, 0.5
 
-                    # Update ELO based on game result
-                    result = board.result()
-                    if result == '1-0':
-                        winner, loser = game["player1"], game["player2"]
-                        winner_result, loser_result = 1, 0
-                    elif result == '0-1':
-                        winner, loser = game["player2"], game["player1"]
-                        winner_result, loser_result = 1, 0
-                    else:
-                        winner, loser = game["player1"], game["player2"]
-                        winner_result, loser_result = 0.5, 0.5
+                winner.elo = calculate_elo(winner.elo, loser.elo, winner_result)
+                loser.elo = calculate_elo(loser.elo, winner.elo, loser_result)
 
-                    winner.elo = calculate_elo(winner.elo, loser.elo, winner_result)
-                    loser.elo = calculate_elo(loser.elo, winner.elo, loser_result)
+                # Update opponent data for both players
+                opponent_name = game["player2"].name if self == game["player1"] else game["player1"].name
+                for player in [game["player1"], game["player2"]]:
+                    opponent = player.opponents.get(opponent_name, {"games_played": 0})
+                    opponent["games_played"] += 1
+                    player.opponents[opponent_name] = opponent
 
-                    # Update opponent data
-                    opponent_name = game["player2"].name if self == game["player1"] else game["player1"].name
-                    if opponent_name not in self.opponents:
-                        self.opponents[opponent_name] = {"games_played": 0}
-                    self.opponents[opponent_name]["games_played"] += 1
+                # Save updated profiles to file
+                save_profiles()
 
-                    logging.info(f"chess_demo: Updated ELO: {winner.name} {winner.elo}, {loser.name} {loser.elo}")
-
-                    # Save updated profiles to file
-                    save_profiles()
-
-                    # Save the game to PGN file
-                    save_game_to_pgn(game, board, result)
-
-            except Exception as e:
-                logging.error(f"chess_demo: Error in game on board {game['board_id']}: {e}")
+                # Save the game to PGN file
+                save_game_to_pgn(game, board, result)
 
     def play_games(self):
         while True:
@@ -129,6 +115,7 @@ class PlayerProfile:
             "elo": self.elo,
             "profile_image": self.profile_image,
             "uci_elo": self.uci_elo,
+            "time": self.time,
             "opponents": self.opponents
         }
         return profile_dict
@@ -142,7 +129,6 @@ def save_profiles():
     profiles = {name: profile.to_dict() for name, profile in player_profiles.items()}
     with open("player_profiles.json", "w") as file:
         json.dump(profiles, file, indent=4)
-    logging.info("chess_demo: Saved updated player profiles to player_profiles.json")
 
 def calculate_elo(player_elo, opponent_elo, result):
     K = 30
@@ -175,7 +161,6 @@ def save_game_to_pgn(game, board, result):
 
     with open(PGN_FILE, "a") as pgn_file:
         print(game_pgn, file=pgn_file)
-    logging.info("chess_demo: Saved game to PGN file")
 
 # Load player profiles once during initialization
 player_profiles = load_player_profiles('./.venv/bin/stockfish')
@@ -222,7 +207,6 @@ def start_games():
             create_game(player1, player2, board_id)
             created_games.append({"board_id": board_id, "fen": boards[board_id]["board"].fen()})
 
-    logging.info(f"chess_demo: creates_games: {created_games}")
     return jsonify(created_games), 201
 
 @app.route('/start_game/<int:board_id>', methods=['POST'])
@@ -257,7 +241,6 @@ def get_boards():
         "fen": board_data["board"].fen(),
         "games": [{"player1": game["player1"].to_dict(), "player2": game["player2"].to_dict()} for game in board_data["games"]]
     } for board_id, board_data in boards.items()]
-    logging.debug("chess_demo: Boards requested: %s", response)
     return jsonify(boards=response)
 
 @app.route('/get_board/<int:board_id>', methods=['GET'])
@@ -302,9 +285,7 @@ def piece_image(filename):
 @app.route('/')
 def index():
     boards_info = [{"board_id": board_id, "games": board_data["games"]} for board_id, board_data in boards.items()]
-    logging.debug("chess_demo: Rendering index.html with boards: %s", boards_info)
     return render_template('index.html', boards=boards_info)
 
 if __name__ == '__main__':
     app.run(port=5000)
-
