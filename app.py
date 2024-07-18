@@ -16,14 +16,15 @@ logging.basicConfig(level=logging.DEBUG)
 PGN_FILE = "games.pgn"
 EVENT_NAME = "The Whimsical Chess Tournament"
 SITE = "SIGGRAPH 2024"
+SYZYGY_PATH = "./syzygy"  # Path to Syzygy tablebases directory
 
 class PlayerProfile:
     def __init__(self, name, profile_data, stockfish_path):
         self.name = name
         self.elo = profile_data["elo"]
         self.profile_image = profile_data["profile_image"]
-        self.depth = profile_data.get("depth", 15)
-        self.uci_elo = profile_data.get("uci_elo", 1320)
+        self.depth = profile_data.get("depth", 15)  # Provide a default value if depth is not in profile_data
+        self.uci_elo = profile_data.get("uci_elo", 1320)  # Provide a default value if uci_elo is not in profile_data
         self.stockfish_path = stockfish_path
         self.engine = self._spawn_engine()
         self.games = []
@@ -37,7 +38,8 @@ class PlayerProfile:
         engine = chess.engine.SimpleEngine.popen_uci(self.stockfish_path)
         engine.configure({
             "UCI_LimitStrength": True,
-            "UCI_Elo": self.uci_elo
+            "UCI_Elo": self.uci_elo,
+            "SyzygyPath": SYZYGY_PATH  # Configure the engine to use Syzygy tablebases
         })
         return engine
 
@@ -51,7 +53,7 @@ class PlayerProfile:
 
     def play_move(self, board, board_id):
         try:
-            result = self.engine.play(board, chess.engine.Limit(depth=self.depth, time=0.1))
+            result = self.engine.play(board, chess.engine.Limit(depth=self.depth, time=0.1))  # Added time limit of 0.1 seconds per move
             logging.debug(f"chess_demo: {self.name} move: {result.move}, board: {board_id}")
             return result.move
         except Exception as e:
@@ -145,7 +147,7 @@ def save_profiles():
 
 def calculate_elo(player_elo, opponent_elo, result):
     K = 30
-    expected_score = 1.0 * 1.0 / (1 + 1.0 * math.pow(10, 1.0 * (player_elo - opponent_elo) / 400))
+    expected_score = 1.0 / (1 + 10 ** ((opponent_elo - player_elo) / 400))
     return round(player_elo + K * (result - expected_score))
 
 def save_game_to_pgn(game, board, result):
@@ -170,7 +172,7 @@ def save_game_to_pgn(game, board, result):
         game_node = game_node.add_main_variation(move)
 
     with open(PGN_FILE, "a") as pgn_file:
-        pgn_file.write(str(game_pgn) + "\n\n")
+        print(game_pgn, file=pgn_file)
     logging.info("chess_demo: Saved game to PGN file")
 
 # Load player profiles once during initialization
