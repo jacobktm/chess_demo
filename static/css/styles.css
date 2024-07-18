@@ -1,52 +1,70 @@
 body {
   font-family: Arial, sans-serif;
   padding-top: 2rem; /* Space between top of the window and boards */
+  padding-left: 2rem;
+  padding-right:2rem;
 }
 
-.boards-container {
+.container {
   width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.boards-wrapper {
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
 }
 
 .board-container {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  width: 55%; /* Adjust as necessary */
+  flex: 1 1 calc(5% - 0.25rem); /* Allow more boards to fit in one row */
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0; /* Remove any padding */
 }
 
 .profiles-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 45%;
-  padding-right: 1rem;
+  margin-right: 0.25rem; /* Reduce space between profile and board */
+  padding: 0;
+  padding-right: .25rem;
+}
+
+.profile-gap {
+  height: 1rem; /* Adjust as necessary */
 }
 
 .board-frame {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0;
+  margin: 0;
 }
 
 .profile-image {
-  width: 75px; /* Adjust as necessary */
-  height: 75px; /* Adjust as necessary */
+  width: 60px; /* Adjust as necessary */
+  height: 60px; /* Adjust as necessary */
   object-fit: cover;
   border-radius: 50%;
 }
 
 .profile-info {
   text-align: center;
-  margin: 0.5rem 0;
+  margin: 0.25rem 0; /* Reduce margin */
+  font-size: 1.2rem;
 }
 
 .chess-board {
-  width: 250px; /* Adjust as necessary */
+  width: 200px; /* Adjust as necessary */
   height: auto;
-  margin: 0 auto;
+  margin: 0; /* Remove auto margin */
 }
 
 .profile-name-top,
@@ -54,4 +72,3 @@ body {
   text-align: center;
   margin: 0;
 }
-

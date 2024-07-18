@@ -33,27 +33,25 @@ async function initializeBoards() {
     boardContainer.className = 'board-container';
 
     boardContainer.innerHTML = `
-      <div class="d-flex align-items-center">
-        <div class="profiles-container">
-          <div class="profile profile-player2">
-            <img src="/img/profile_imgs/${board.games[0].player2.profile_image}" alt="${board.games[0].player2.name}" class="profile-image">
-            <div class="profile-info">
-              <p>ELO: ${board.games[0].player2.elo}</p>
-            </div>
-          </div>
-          <div class="gap"></div>
-          <div class="profile profile-player1">
-            <div class="profile-info">
-              <p>ELO: ${board.games[0].player1.elo}</p>
-            </div>
-            <img src="/img/profile_imgs/${board.games[0].player1.profile_image}" alt="${board.games[0].player1.name}" class="profile-image">
+      <div class="profiles-container">
+        <div class="profile profile-player2">
+          <img src="/img/profile_imgs/${board.games[0].player2.profile_image}" alt="${board.games[0].player2.name}" class="profile-image">
+          <div class="profile-info">
+            <p>ELO: ${board.games[0].player2.elo}</p>
           </div>
         </div>
-        <div class="board-frame">
-          <div class="profile-name-top">${board.games[0].player2.name}</div>
-          <div id="${boardElementId}" class="chess-board"></div>
-          <div class="profile-name-bottom">${board.games[0].player1.name}</div>
+        <div class="profile-gap"></div>
+        <div class="profile profile-player1">
+          <div class="profile-info">
+            <p>ELO: ${board.games[0].player1.elo}</p>
+          </div>
+          <img src="/img/profile_imgs/${board.games[0].player1.profile_image}" alt="${board.games[0].player1.name}" class="profile-image">
         </div>
+      </div>
+      <div class="board-frame">
+        <div class="profile-name-top">${board.games[0].player2.name}</div>
+        <div id="${boardElementId}" class="chess-board"></div>
+        <div class="profile-name-bottom">${board.games[0].player1.name}</div>
       </div>
     `;
 
