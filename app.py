@@ -119,7 +119,6 @@ class PlayerProfile:
             ongoing_games = [game_info for game_info in self.games if not boards[game_info["game"]["board_id"]]["board"].is_game_over()]
             for game_info in ongoing_games:
                 self.play_game(game_info)
-            time.sleep(0.1)
 
     def quit(self):
         self.engine.quit()
@@ -148,7 +147,10 @@ def save_profiles():
 def calculate_elo(player_elo, opponent_elo, result):
     K = 30
     expected_score = 1.0 / (1 + 10 ** ((opponent_elo - player_elo) / 400))
-    return round(player_elo + K * (result - expected_score))
+    elo = round(player_elo + K * (result - expected_score))
+    if elo < 100:
+        elo = 100
+    return elo
 
 def save_game_to_pgn(game, board, result):
     player1, player2 = game["player1"], game["player2"]
