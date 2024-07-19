@@ -1,3 +1,5 @@
+import os
+import logging
 from flask import Flask, jsonify, render_template, send_from_directory, request
 import json
 import chess.engine
@@ -9,6 +11,15 @@ import random
 import chess.pgn
 
 app = Flask(__name__, static_url_path='/static')
+
+# Determine if logging should be enabled
+logging_enabled = os.getenv('LOGGING_ENABLED', 'false').lower() in ('true', '1', 't')
+
+if logging_enabled:
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format='chess_demo: %(message)s'
+    )
 
 PGN_FILE = "games.pgn"
 EVENT_NAME = "The Whimsical Chess Tournament"
@@ -39,19 +50,29 @@ class PlayerProfile:
             "UCI_Elo": self.uci_elo,
             "SyzygyPath": SYZYGY_PATH  # Configure the engine to use Syzygy tablebases
         })
+        if logging_enabled:
+            logging.debug(f"Engine spawned for {self.name} with ELO {self.uci_elo}")
         return engine
 
     def add_game(self, game, color):
         self.games.append({"game": game, "color": color, "initial_elo": self.elo})
+        if logging_enabled:
+            logging.debug(f"Game added for {self.name}, color: {color}, total games: {len(self.games)}")
 
     def remove_game(self, game):
         self.games = [g for g in self.games if g["game"] != game]
+        if logging_enabled:
+            logging.debug(f"Game removed for {self.name}, total games: {len(self.games)}")
 
     def play_move(self, board, board_id):
         try:
             result = self.engine.play(board, chess.engine.Limit(depth=self.depth, time=self.time))  # Added time limit of 0.1 seconds per move
+            if logging_enabled:
+                logging.debug(f"Move played by {self.name} on board {board_id}: {result.move}")
             return result.move
         except Exception as e:
+            if logging_enabled:
+                logging.error(f"Error playing move by {self.name} on board {board_id}: {e}")
             return None
 
     def play_game(self, game_info):
@@ -69,6 +90,8 @@ class PlayerProfile:
                     board.push(move)
                     game["last_move_time"] = datetime.now().isoformat()
                     game["turn"] = chess.BLACK if current_turn == chess.WHITE else chess.WHITE
+                    if logging_enabled:
+                        logging.debug(f"Move made on board {game['board_id']}, turn: {game['turn']}")
             else:
                 self.remove_game(game)
 
@@ -87,27 +110,27 @@ class PlayerProfile:
                 winner.elo = calculate_elo(winner.elo, loser.elo, winner_result)
                 loser.elo = calculate_elo(loser.elo, winner.elo, loser_result)
 
-                # Update opponent data for both players
-                opponent_name = game["player2"].name if self == game["player1"] else game["player1"].name
-                for player in [game["player1"], game["player2"]]:
-                    opponent = player.opponents.get(opponent_name, {"games_played": 0})
-                    opponent["games_played"] += 1
-                    player.opponents[opponent_name] = opponent
-
                 # Save updated profiles to file
                 save_profiles()
+                if logging_enabled:
+                    logging.debug(f"Profiles saved after game on board {game['board_id']}")
 
                 # Save the game to PGN file
                 save_game_to_pgn(game, board, result)
+                if logging_enabled:
+                    logging.debug(f"Game on board {game['board_id']} saved to PGN with result {result}")
 
     def play_games(self):
         while True:
             ongoing_games = [game_info for game_info in self.games if not boards[game_info["game"]["board_id"]]["board"].is_game_over()]
             for game_info in ongoing_games:
                 self.play_game(game_info)
+            time.sleep(1)  # Sleep to allow the UI to update and avoid too rapid moves
 
     def quit(self):
         self.engine.quit()
+        if logging_enabled:
+            logging.debug(f"Engine for {self.name} has quit")
 
     def to_dict(self):
         profile_dict = {
@@ -123,12 +146,16 @@ class PlayerProfile:
 def load_player_profiles(stockfish_path):
     with open("player_profiles.json", "r") as file:
         profiles = json.load(file)
+    if logging_enabled:
+        logging.debug("Player profiles loaded")
     return {name: PlayerProfile(name, data, stockfish_path) for name, data in profiles.items()}
 
 def save_profiles():
     profiles = {name: profile.to_dict() for name, profile in player_profiles.items()}
     with open("player_profiles.json", "w") as file:
         json.dump(profiles, file, indent=4)
+    if logging_enabled:
+        logging.debug("Player profiles saved")
 
 def calculate_elo(player_elo, opponent_elo, result):
     K = 30
@@ -136,12 +163,21 @@ def calculate_elo(player_elo, opponent_elo, result):
     elo = round(player_elo + K * (result - expected_score))
     if elo < 100:
         elo = 100
+    if logging_enabled:
+        logging.debug(f"ELO calculated: player_elo={player_elo}, opponent_elo={opponent_elo}, result={result}, new_elo={elo}")
     return elo
 
 def save_game_to_pgn(game, board, result):
     player1, player2 = game["player1"], game["player2"]
-    opponent_name = player2.name if player1 == game["player1"] else player1.name
-    round_number = player1.opponents[opponent_name]["games_played"]
+    opponent = player1.opponents.get(player2.name, None)
+    if opponent is None:
+        round_number = 1
+        player1.opponents[player2.name] = {"games_played": round_number}
+        player2.opponents[player1.name] = {"games_played": round_number}
+    else:
+        round_number = player1.opponents[player2.name]["games_played"] + 1
+        player1.opponents[player2.name]["games_played"] = round_number
+        player2.opponents[player1.name]["games_played"] = round_number
 
     game_pgn = chess.pgn.Game()
     game_pgn.headers["Event"] = EVENT_NAME
@@ -161,6 +197,8 @@ def save_game_to_pgn(game, board, result):
 
     with open(PGN_FILE, "a") as pgn_file:
         print(game_pgn, file=pgn_file)
+    if logging_enabled:
+        logging.debug(f"Game between {player1.name} and {player2.name} saved to PGN")
 
 # Load player profiles once during initialization
 player_profiles = load_player_profiles('./.venv/bin/stockfish')
@@ -194,6 +232,9 @@ def create_game(player1, player2, board_id):
         threading.Thread(target=player_profiles[player2].play_games, daemon=True).start()
         player_profiles[player2].thread_started = True
 
+    if logging_enabled:
+        logging.debug(f"Game created on board {board_id} between {player1} and {player2}")
+
 @app.route('/start_games', methods=['POST'])
 def start_games():
     player_keys = list(player_profiles.keys())
@@ -224,6 +265,9 @@ def start_game(board_id):
         boards[board_id]["board"].reset()
         boards[board_id]["games"].clear()
         create_game(player1, player2, board_id)
+
+    if logging_enabled:
+        logging.debug(f"New game started on board {board_id} between {player1} and {player2}")
 
     return jsonify({
         "board_id": board_id,
@@ -267,6 +311,8 @@ def stop_games():
             game["player2"].quit()
     boards.clear()
     games.clear()
+    if logging_enabled:
+        logging.debug("All games stopped")
     return jsonify({"status": "All games stopped"}), 200
 
 @app.route('/get_profiles', methods=['GET'])
@@ -281,6 +327,18 @@ def profile_image(filename):
 @app.route('/img/chesspieces/wikipedia/<filename>')
 def piece_image(filename):
     return send_from_directory('static/img/chesspieces/wikipedia', filename)
+
+@app.route('/get_images', methods=['GET'])
+def get_images():
+    img_dir = os.path.join(app.static_folder, 'img')
+    img_files = []
+    for root, _, files in os.walk(img_dir):
+        for file in files:
+            if file.endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                # Adjust the path to be relative to the static directory
+                relative_path = os.path.relpath(os.path.join(root, file), app.static_folder)
+                img_files.append(relative_path)
+    return jsonify(img_files)
 
 @app.route('/')
 def index():

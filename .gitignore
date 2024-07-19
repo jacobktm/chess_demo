@@ -5,3 +5,4 @@ package-lock.json
 *.pgn
 *.rtbw
 *.rtbz
+__pycache__
