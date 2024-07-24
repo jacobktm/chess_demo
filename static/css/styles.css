@@ -1,0 +1,86 @@
+body {
+  font-family: Arial, sans-serif;
+  padding-top: 2rem; /* Space between top of the window and boards */
+  padding-left: 2rem;
+  padding-right:2rem;
+}
+
+.container {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+}
+
+#boards-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1rem;
+  margin: 0;
+  width: 2560px;
+}
+
+.board-container {
+  display: flex;
+  align-items: center;
+  flex: 1 1 calc(5% - 0.25rem); /* Allow more boards to fit in one row */
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0; /* Remove any padding */
+}
+
+.profiles-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 0; /* Reduce space between profile and board */
+  padding: 0;
+  padding-right: .5rem;
+}
+
+.profile-gap {
+  height: .8rem; /* Adjust as necessary */
+}
+
+.board-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+
+.profile-image {
+  width: 60px; /* Adjust as necessary */
+  height: 60px; /* Adjust as necessary */
+  object-fit: cover;
+  border-radius: 50%;
+  align-self: center;
+  padding: 0;
+}
+
+.profile-info {
+  text-align: center;
+  margin: 0; /* Reduce margin */
+  font-size: .85rem;
+}
+
+.chess-board {
+  width: 200px; /* Adjust as necessary */
+  height: auto;
+  margin: 0; /* Remove auto margin */
+  padding-right: .5rem;
+}
+
+.profile-name-top,
+.profile-name-bottom {
+  text-align: center;
+  margin: 0;
+  font-size: .85rem;
+}
+
+#debug {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}

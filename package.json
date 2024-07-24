@@ -1,0 +1,16 @@
+{
+  "name": "chess_demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^24.2.1"
+  },
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC"
+}
+

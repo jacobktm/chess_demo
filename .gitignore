@@ -1,2 +1,8 @@
 .venv
 Stockfish
+node_modules
+package-lock.json
+*.pgn
+*.rtbw
+*.rtbz
+__pycache__
