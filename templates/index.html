@@ -7,6 +7,7 @@
   <link href="/static/css/bootstrap.min.css" rel="stylesheet">
   <link href="/static/css/chessboard-1.0.0.min.css" rel="stylesheet">
   <link href="/static/css/styles.css" rel="stylesheet">
+  <link href="/static/css/charts.min.css" rel="stylesheet">
 </head>
 <body>
 
@@ -14,6 +15,20 @@
     <div id="boards-wrapper">
       <!-- Chess boards will be dynamically added here -->
     </div>
+  </div>
+
+  <div>
+    <h1>Real-Time CPU Usage</h1>
+        <table class="charts-css column show-data show-labels show-primary-axis show-10-secondary-axes" id="chart">
+            <thead>
+                <tr>
+                    <th scope="col">CPU</th>
+                    <th scope="col">Usage</th>
+                </tr>
+            </thead>
+            <tbody id="chart-body">
+            </tbody>
+        </table>
   </div>
 
   <script src="/static/js/jquery-3.7.1.min.js"></script>

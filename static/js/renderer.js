@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Start games when the application loads
   await fetch('/start_games', { method: 'POST' });
 
+  await setInterval(fetchCpuUsage, 200);
+
   // Initialize boards
   await initializeBoards();
 
@@ -183,4 +185,62 @@ function updateLayout() {
   // Set the width of the boards-wrapper container based on the window size
   const windowWidth = window.innerWidth;
   boardsContainer.style.width = `${windowWidth}px`;
+}
+
+let previousHeights = [];
+
+function getColor(value) {
+  if (value <= 25) {
+      return 'linear-gradient(to bottom, #00FF00, #00FF00)'; // green
+  } else if (value <= 50) {
+      return 'linear-gradient(to bottom, #FFFF00, #00FF00)'; // yellow to green
+  } else if (value <= 75) {
+      return 'linear-gradient(to bottom, #FFA500, #FFFF00, #00FF00)'; // orange to yellow
+  } else {
+      return 'linear-gradient(to bottom, #FF0000, #FFA500, #FFFF00, #00FF00)'; // red to orange
+  }
+}
+
+async function fetchCpuUsage() {
+  try {
+      const cpuResponse = await fetch('/cpu');
+      const cpuData = await cpuResponse.json();
+      const chartBody = document.getElementById('chart-body');
+      chartBody.innerHTML = ''; // Clear the previous bars
+      
+      cpuData.cpu.forEach((usage, index) => {
+          const row = document.createElement('tr');
+          const cpuLabel = document.createElement('th');
+          cpuLabel.scope = 'row';
+          cpuLabel.textContent = `CPU ${index}`;
+          
+          const cpuBar = document.createElement('td');
+          cpuBar.className = 'cpu-bar';
+          cpuBar.style.setProperty('--color', getColor(usage));
+          cpuBar.innerHTML = `<span class="data">${usage}%</span>`;
+          
+          // Retrieve previous height or default to 0
+          const previousHeight = previousHeights[index] || 0;
+          const newHeight = usage;
+          
+          // Update the previous height array
+          previousHeights[index] = newHeight;
+          
+          // Animate the height change
+          cpuBar.animate([
+              { height: previousHeight + '%' },
+              { height: newHeight + '%' }
+          ], {
+              duration: 200,
+              easing: 'ease-in-out',
+              fill: 'forwards'
+          });
+          
+          row.appendChild(cpuLabel);
+          row.appendChild(cpuBar);
+          chartBody.appendChild(row);
+      });
+  } catch (error) {
+      console.error('Error fetching CPU usage:', error);
+  }
 }

@@ -7,6 +7,7 @@ import threading
 from datetime import datetime
 import math
 import time
+import psutil
 import random
 import chess.pgn
 
@@ -350,6 +351,11 @@ def get_images():
                 relative_path = os.path.relpath(os.path.join(root, file), app.static_folder)
                 img_files.append(relative_path)
     return jsonify(img_files)
+
+@app.route('/cpu')
+def cpu_usage():
+    cpu_percent = psutil.cpu_percent(interval=1, percpu=True)
+    return jsonify(cpu=cpu_percent)
 
 @app.route('/')
 def index():
