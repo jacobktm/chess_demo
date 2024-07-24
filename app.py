@@ -137,7 +137,7 @@ class PlayerProfile:
             ongoing_games = [game_info for game_info in self.games if not boards[game_info["game"]["board_id"]]["board"].is_game_over()]
             for game_info in ongoing_games:
                 self.play_game(game_info)
-            time.sleep(.1)  # Sleep to allow the UI to update and avoid too rapid moves
+            time.sleep(.333)  # Sleep to allow the UI to update and avoid too rapid moves
 
     def quit(self):
         self.engine.quit()
@@ -151,6 +151,7 @@ class PlayerProfile:
             "profile_image": self.profile_image,
             "uci_elo": self.uci_elo,
             "time": self.time,
+            "depth": self.depth,
             "opponents": self.opponents
         }
         return profile_dict

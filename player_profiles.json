@@ -4,139 +4,191 @@
         "elo": 1200,
         "profile_image": "Sir_Checkmate_The_Bold.png",
         "time": 0.25,
-        "uci_elo": 2000
+        "uci_elo": 2000,
+        "depth": 15
     },
     "Lady Gambit The Clever": {
         "name": "Lady Gambit The Clever",
         "elo": 1200,
         "profile_image": "Lady_Gambit_The_Clever.png",
         "time": 0.2,
-        "uci_elo": 1800
+        "uci_elo": 1800,
+        "depth": 12
     },
     "Baron Rookslide The Swift": {
         "name": "Baron Rookslide The Swift",
         "elo": 1200,
         "profile_image": "Baron_Rookslide_The_Swift.png",
         "time": 0.15,
-        "uci_elo": 1600
+        "uci_elo": 1600,
+        "depth": 10
     },
     "Duchess Pawnmaster The Wise": {
         "name": "Duchess Pawnmaster The Wise",
         "elo": 1200,
         "profile_image": "Duchess_Pawnmaster_The_Wise.png",
         "time": 0.1,
-        "uci_elo": 1400
+        "uci_elo": 1400,
+        "depth": 8
     },
     "Count Forkula the Strategic": {
         "name": "Count Forkula the Strategic",
         "elo": 1200,
         "profile_image": "Count_Forkula_The_Strategic.png",
         "time": 0.3,
-        "uci_elo": 2200
+        "uci_elo": 2200,
+        "depth": 20
     },
     "Countess En Passant the Swift": {
         "name": "Countess En Passant the Swift",
         "elo": 1200,
         "profile_image": "Countess_En_Passant_The_Swift.png",
         "time": 0.32,
-        "uci_elo": 2250
+        "uci_elo": 2250,
+        "depth": 22
     },
     "Professor Whimsy Checkmate": {
         "name": "Professor Whimsy Checkmate",
         "elo": 1200,
         "profile_image": "Professor_Whimsy_Checkmate.png",
         "time": 0.19,
-        "uci_elo": 1520
+        "uci_elo": 1520,
+        "depth": 11
     },
     "Sir Jester Pawnsworth": {
         "name": "Sir Jester Pawnsworth",
         "elo": 1200,
         "profile_image": "Sir_Jester_Pawnsworth.png",
         "time": 0.12,
-        "uci_elo": 1416
+        "uci_elo": 1416,
+        "depth": 9
     },
     "Duchess Gambit Von Puzzler": {
         "name": "Duchess Gambit Von Puzzler",
         "elo": 1200,
         "profile_image": "Duchess_Gambit_Von_Puzzler.png",
         "time": 0.22,
-        "uci_elo": 1840
+        "uci_elo": 1840,
+        "depth": 14
     },
     "Baron Rookington": {
         "name": "Baron Rookington",
         "elo": 1200,
         "profile_image": "Baron_Rookington.png",
         "time": 0.08,
-        "uci_elo": 1320
+        "uci_elo": 1320,
+        "depth": 7
     },
     "Maestro Checkelini": {
         "name": "Maestro Checkelini",
         "elo": 1200,
         "profile_image": "Maestro_Checkelini.png",
         "time": 0.24,
-        "uci_elo": 2014
+        "uci_elo": 2014,
+        "depth": 16
     },
     "Captain Knightly": {
         "name": "Captain Knightly",
         "elo": 1200,
         "profile_image": "Captain_Knightly.png",
         "time": 0.29,
-        "uci_elo": 2190
+        "uci_elo": 2190,
+        "depth": 19
     },
     "Enigma Bishop": {
         "name": "Enigma Bishop",
         "elo": 1200,
         "profile_image": "Enigma_Bishop.png",
         "time": 0.11,
-        "uci_elo": 1412
+        "uci_elo": 1412,
+        "depth": 9
     },
     "Sage Pawnwise": {
         "name": "Sage Pawnwise",
         "elo": 1200,
         "profile_image": "Sage_Pawnwise.png",
         "time": 0.36,
-        "uci_elo": 2500
+        "uci_elo": 2500,
+        "depth": 24
     },
     "Lord Checkersworth": {
         "name": "Lord Checkersworth",
         "elo": 1200,
         "profile_image": "Lord_Checkersworth.png",
         "time": 0.45,
-        "uci_elo": 2700
+        "uci_elo": 2700,
+        "depth": 25
     },
     "Lady Knightingale": {
         "name": "Lady Knightingale",
         "elo": 1200,
         "profile_image": "Lady_Knightingale.png",
         "time": 0.35,
-        "uci_elo": 2900
+        "uci_elo": 2900,
+        "depth": 23
     },
     "Grandmaster Mischief": {
         "name": "Grandmaster Mischief",
         "elo": 1200,
         "profile_image": "Grandmaster_Mischief.png",
         "time": 0.25,
-        "uci_elo": 2500
+        "uci_elo": 2500,
+        "depth": 21
     },
     "Countess Castella": {
         "name": "Countess Castella",
         "elo": 1200,
         "profile_image": "Countess_Castella.png",
         "time": 0.4,
-        "uci_elo": 3100
+        "uci_elo": 3100,
+        "depth": 25
     },
     "Sir Pawnalot": {
         "name": "Sir Pawnalot",
         "elo": 1200,
         "profile_image": "Sir_Pawnalot.png",
         "time": 0.3,
-        "uci_elo": 2100
+        "uci_elo": 2100,
+        "depth": 18
     },
     "Wizard Chessington": {
         "name": "Wizard Chessington",
         "elo": 1200,
         "profile_image": "Wizard_Chessington.png",
         "time": 0.37,
-        "uci_elo": 2800
+        "uci_elo": 2800,
+        "depth": 23
+    },
+    "Duke Tactico": {
+        "name": "Duke Tactico",
+        "elo": 1200,
+        "profile_image": "Duke_Tactico.png",
+        "time": 0.33,
+        "uci_elo": 2950,
+        "depth": 24
+    },
+    "Sir Blitz Alot": {
+        "name": "Sir Blitz Alot",
+        "elo": 1200,
+        "profile_image": "Sir_Blitz_Alot.png",
+        "time": 0.2,
+        "uci_elo": 2750,
+        "depth": 20
+    },
+    "Countess Strategia": {
+        "name": "Countess Strategia",
+        "elo": 1200,
+        "profile_image": "Countess_Strategia.png",
+        "time": 0.41,
+        "uci_elo": 3100,
+        "depth": 25
+    },
+    "Maestro Capablanca": {
+        "name": "Maestro Capablanca",
+        "elo": 1200,
+        "profile_image": "Maestro_Capablanca.png",
+        "time": 0.37,
+        "uci_elo": 2800,
+        "depth": 22
     }
 }

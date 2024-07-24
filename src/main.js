@@ -2,10 +2,13 @@ const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
 const http = require('http');
+const os = require('os');
 
 let flaskProcess;
 let mainWindow;
+let memoryCheckInterval;
 
+// Function to wait for the Flask server to start
 function waitForFlaskServer() {
   return new Promise((resolve, reject) => {
     const maxRetries = 20;
@@ -37,6 +40,7 @@ function waitForFlaskServer() {
   });
 }
 
+// Function to create the Electron window
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
@@ -59,7 +63,8 @@ function createWindow() {
   Menu.setApplicationMenu(null);
 }
 
-app.on('ready', async () => {
+// Function to start the Flask server
+function startFlaskServer() {
   flaskProcess = spawn('python3', ['app.py'], { cwd: path.join(__dirname, '..') });
 
   flaskProcess.stdout.on('data', (data) => {
@@ -73,10 +78,45 @@ app.on('ready', async () => {
   flaskProcess.on('close', (code) => {
     console.log(`Flask process exited with code ${code}`);
   });
+}
+
+// Function to stop the Flask server
+function stopFlaskServer() {
+  if (flaskProcess) {
+    flaskProcess.kill();
+    flaskProcess = null;
+  }
+}
+
+// Function to restart the Electron app
+function restartApp() {
+  stopFlaskServer();
+  app.relaunch();
+  app.exit();
+}
+
+// Function to monitor system memory
+function monitorMemory(thresholdMB) {
+  memoryCheckInterval = setInterval(() => {
+    const freeMemoryMB = os.freemem() / 1024 / 1024;
+    console.log(`Available memory: ${freeMemoryMB.toFixed(2)} MB`);
+
+    if (freeMemoryMB < thresholdMB) {
+      console.warn(`Memory is below threshold (${thresholdMB} MB). Restarting app.`);
+      clearInterval(memoryCheckInterval);
+      restartApp();
+    }
+  }, 5000); // Check every 5 seconds
+}
+
+// Main app event listeners
+app.on('ready', async () => {
+  startFlaskServer();
 
   try {
     await waitForFlaskServer();
     createWindow();
+    monitorMemory(8000); // Set memory threshold to 500 MB
   } catch (err) {
     console.error(err);
     app.quit();
@@ -90,12 +130,10 @@ app.on('window-all-closed', function () {
 });
 
 app.on('quit', () => {
-  if (flaskProcess) {
-    flaskProcess.kill();
-  }
+  stopFlaskServer();
+  clearInterval(memoryCheckInterval);
 });
 
 app.on('activate', function () {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
-
