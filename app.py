@@ -125,7 +125,7 @@ class PlayerProfile:
             ongoing_games = [game_info for game_info in self.games if not boards[game_info["game"]["board_id"]]["board"].is_game_over()]
             for game_info in ongoing_games:
                 self.play_game(game_info)
-            time.sleep(1)  # Sleep to allow the UI to update and avoid too rapid moves
+            time.sleep(.1)  # Sleep to allow the UI to update and avoid too rapid moves
 
     def quit(self):
         self.engine.quit()
@@ -203,7 +203,7 @@ def save_game_to_pgn(game, board, result):
 # Load player profiles once during initialization
 player_profiles = load_player_profiles('./.venv/bin/stockfish')
 player_keys = list(player_profiles.keys())
-NUM_BOARDS = math.ceil(len(player_keys) / 2)
+NUM_BOARDS = 24
 games = []
 boards = {i: {"board": chess.Board(), "games": []} for i in range(1, NUM_BOARDS + 1)}
 
