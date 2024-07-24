@@ -15,7 +15,8 @@ body {
 #boards-wrapper {
   display: flex;
   flex-wrap: wrap;
-  padding: 1rem;
+  padding-left: 4rem;
+  padding-right: 6rem;
   margin: 0;
   width: 2560px;
 }
@@ -27,6 +28,8 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 0; /* Remove any padding */
+  padding-bottom: 1rem;
+  padding-right: 1.5rem;
 }
 
 .profiles-container {
@@ -35,7 +38,6 @@ body {
   align-items: center;
   margin-right: 0; /* Reduce space between profile and board */
   padding: 0;
-  padding-right: .5rem;
 }
 
 .profile-gap {
@@ -48,6 +50,7 @@ body {
   align-items: center;
   padding: 0;
   margin: 0;
+  padding-left: 1rem;
 }
 
 .profile-image {
