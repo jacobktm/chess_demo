@@ -96,5 +96,47 @@
         "profile_image": "Sage_Pawnwise.png",
         "time": 0.36,
         "uci_elo": 2500
+    },
+    "Lord Checkersworth": {
+        "name": "Lord Checkersworth",
+        "elo": 1200,
+        "profile_image": "Lord_Checkersworth.png",
+        "time": 0.45,
+        "uci_elo": 2700
+    },
+    "Lady Knightingale": {
+        "name": "Lady Knightingale",
+        "elo": 1200,
+        "profile_image": "Lady_Knightingale.png",
+        "time": 0.35,
+        "uci_elo": 2900
+    },
+    "Grandmaster Mischief": {
+        "name": "Grandmaster Mischief",
+        "elo": 1200,
+        "profile_image": "Grandmaster_Mischief.png",
+        "time": 0.25,
+        "uci_elo": 2500
+    },
+    "Countess Castella": {
+        "name": "Countess Castella",
+        "elo": 1200,
+        "profile_image": "Countess_Castella.png",
+        "time": 0.4,
+        "uci_elo": 3100
+    },
+    "Sir Pawnalot": {
+        "name": "Sir Pawnalot",
+        "elo": 1200,
+        "profile_image": "Sir_Pawnalot.png",
+        "time": 0.3,
+        "uci_elo": 2100
+    },
+    "Wizard Chessington": {
+        "name": "Wizard Chessington",
+        "elo": 1200,
+        "profile_image": "Wizard_Chessington.png",
+        "time": 0.37,
+        "uci_elo": 2800
     }
 }
