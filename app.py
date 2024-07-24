@@ -64,9 +64,20 @@ class PlayerProfile:
         if logging_enabled:
             logging.debug(f"Game removed for {self.name}, total games: {len(self.games)}")
 
+    def calculate_dynamic_depth(self, board):
+        # Increase depth as the number of pieces decreases
+        piece_count = len(board.piece_map())
+        if piece_count > 24:  # Opening and early midgame
+            return self.depth
+        elif piece_count > 16:  # Midgame
+            return self.depth + 2
+        else:  # Endgame
+            return self.depth + 5
+
     def play_move(self, board, board_id):
         try:
-            result = self.engine.play(board, chess.engine.Limit(depth=self.depth, time=self.time))  # Added time limit of 0.1 seconds per move
+            dynamic_depth = self.calculate_dynamic_depth(board)
+            result = self.engine.play(board, chess.engine.Limit(depth=dynamic_depth, time=self.time))  # Added time limit of 0.1 seconds per move
             if logging_enabled:
                 logging.debug(f"Move played by {self.name} on board {board_id}: {result.move}")
             return result.move
@@ -125,7 +136,7 @@ class PlayerProfile:
             ongoing_games = [game_info for game_info in self.games if not boards[game_info["game"]["board_id"]]["board"].is_game_over()]
             for game_info in ongoing_games:
                 self.play_game(game_info)
-            time.sleep(1)  # Sleep to allow the UI to update and avoid too rapid moves
+            time.sleep(.1)  # Sleep to allow the UI to update and avoid too rapid moves
 
     def quit(self):
         self.engine.quit()
@@ -203,7 +214,7 @@ def save_game_to_pgn(game, board, result):
 # Load player profiles once during initialization
 player_profiles = load_player_profiles('./.venv/bin/stockfish')
 player_keys = list(player_profiles.keys())
-NUM_BOARDS = math.ceil(len(player_keys) / 2)
+NUM_BOARDS = 24
 games = []
 boards = {i: {"board": chess.Board(), "games": []} for i in range(1, NUM_BOARDS + 1)}
 

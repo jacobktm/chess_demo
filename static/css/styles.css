@@ -9,14 +9,16 @@ body {
   width: 100%;
   padding: 0;
   margin: 0;
+  align-items: center;
 }
 
 #boards-wrapper {
   display: flex;
   flex-wrap: wrap;
-  padding: 0;
+  padding-left: 4rem;
+  padding-right: 6rem;
   margin: 0;
-  width: 100%;
+  width: 2560px;
 }
 
 .board-container {
@@ -26,6 +28,8 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 0; /* Remove any padding */
+  padding-bottom: 1rem;
+  padding-right: 1.5rem;
 }
 
 .profiles-container {
@@ -34,7 +38,6 @@ body {
   align-items: center;
   margin-right: 0; /* Reduce space between profile and board */
   padding: 0;
-  padding-right: .45rem;
 }
 
 .profile-gap {
@@ -47,6 +50,7 @@ body {
   align-items: center;
   padding: 0;
   margin: 0;
+  padding-left: 1rem;
 }
 
 .profile-image {
@@ -68,6 +72,7 @@ body {
   width: 200px; /* Adjust as necessary */
   height: auto;
   margin: 0; /* Remove auto margin */
+  padding-right: .5rem;
 }
 
 .profile-name-top,
