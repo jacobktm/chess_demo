@@ -190,5 +190,69 @@
         "time": 0.37,
         "uci_elo": 2800,
         "depth": 22
+    },
+    "Viscount Gambito": {
+        "name": "Viscount Gambito",
+        "elo": 1200,
+        "profile_image": "Viscount_Gambito.png",
+        "time": 0.27,
+        "uci_elo": 2300,
+        "depth": 17
+    },
+    "Lady Enigma": {
+        "name": "Lady Enigma",
+        "elo": 1200,
+        "profile_image": "Lady_Enigma.png",
+        "time": 0.3,
+        "uci_elo": 2400,
+        "depth": 18
+    },
+    "Sir Shieldsworth": {
+        "name": "Sir Shieldsworth",
+        "elo": 1200,
+        "profile_image": "Sir_Shieldsworth.png",
+        "time": 0.28,
+        "uci_elo": 2200,
+        "depth": 19
+    },
+    "Baroness Checkmate": {
+        "name": "Baroness Checkmate",
+        "elo": 1200,
+        "profile_image": "Baroness_Checkmate.png",
+        "time": 0.35,
+        "uci_elo": 2600,
+        "depth": 21
+    },
+    "Master Trickster": {
+        "name": "Master Trickster",
+        "elo": 1200,
+        "profile_image": "Master_Trickster.png",
+        "time": 0.22,
+        "uci_elo": 2100,
+        "depth": 16
+    },
+    "Countess Epaulette": {
+        "name": "Countess Epaulette",
+        "elo": 1200,
+        "profile_image": "Countess_Epaulette.png",
+        "time": 0.32,
+        "uci_elo": 2500,
+        "depth": 20
+    },
+    "Duke of Disguise": {
+        "name": "Duke of Disguise",
+        "elo": 1200,
+        "profile_image": "Duke_Of_Disguise.png",
+        "time": 0.29,
+        "uci_elo": 2350,
+        "depth": 17
+    },
+    "Princess Checkersina": {
+        "name": "Princess Checkersina",
+        "elo": 1200,
+        "profile_image": "Princess_Checkersina.png",
+        "time": 0.34,
+        "uci_elo": 2450,
+        "depth": 19
     }
 }
