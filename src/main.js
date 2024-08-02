@@ -95,18 +95,37 @@ function restartApp() {
   app.exit();
 }
 
-// Function to monitor system memory
-function monitorMemory(thresholdMB) {
+// Function to monitor V8 and overall process memory usage
+function monitorMemory(v8HeapThresholdMB, overallThresholdMB) {
   memoryCheckInterval = setInterval(() => {
-    const freeMemoryMB = os.freemem() / 1024 / 1024;
-    console.log(`Available memory: ${freeMemoryMB.toFixed(2)} MB`);
+    const memoryUsage = process.memoryUsage();
+    const heapUsedMB = memoryUsage.heapUsed / 1024 / 1024;
+    const heapTotalMB = memoryUsage.heapTotal / 1024 / 1024;
+    const rssMB = memoryUsage.rss / 1024 / 1024; // Resident Set Size - total memory usage including C++ objects, etc.
+    
+    console.log(`Heap Used: ${heapUsedMB.toFixed(2)} MB`);
+    console.log(`Heap Total: ${heapTotalMB.toFixed(2)} MB`);
+    console.log(`RSS: ${rssMB.toFixed(2)} MB`);
 
-    if (freeMemoryMB < thresholdMB) {
-      console.warn(`Memory is below threshold (${thresholdMB} MB). Restarting app.`);
+    if (heapUsedMB > v8HeapThresholdMB || rssMB > overallThresholdMB) {
+      console.warn(`Memory usage is above threshold. Restarting app.`);
       clearInterval(memoryCheckInterval);
       restartApp();
     }
   }, 5000); // Check every 5 seconds
+}
+
+// Function to handle uncaught exceptions and promise rejections
+function handleUncaughtErrors() {
+  process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+    restartApp();
+  });
+
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    restartApp();
+  });
 }
 
 // Main app event listeners
@@ -116,7 +135,8 @@ app.on('ready', async () => {
   try {
     await waitForFlaskServer();
     createWindow();
-    monitorMemory(8000); // Set memory threshold to 500 MB
+    monitorMemory(500, 8000); // Set V8 heap used memory threshold to 500 MB, overall memory threshold to 8000 MB
+    handleUncaughtErrors(); // Add error handling for uncaught exceptions and unhandled rejections
   } catch (err) {
     console.error(err);
     app.quit();
