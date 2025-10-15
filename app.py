@@ -10,6 +10,7 @@ import time
 import psutil
 import random
 import chess.pgn
+import multiprocessing
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -39,6 +40,8 @@ class PlayerProfile:
         self.engine = self._spawn_engine()
         self.games = []
         self.lock = threading.Lock()
+        self.thread = None
+        self.thread_running = False
 
         # Initialize dynamic profile data
         self.profile_data = profile_data
@@ -133,14 +136,28 @@ class PlayerProfile:
                     logging.debug(f"Game on board {game['board_id']} saved to PGN with result {result}")
 
     def play_games(self):
-        while True:
+        self.thread_running = True
+        while self.thread_running:
             ongoing_games = [game_info for game_info in self.games if not boards[game_info["game"]["board_id"]]["board"].is_game_over()]
             for game_info in ongoing_games:
+                if not self.thread_running:
+                    break
                 self.play_game(game_info)
             time.sleep(.333)  # Sleep to allow the UI to update and avoid too rapid moves
 
     def quit(self):
-        self.engine.quit()
+        # Stop the thread first
+        self.thread_running = False
+        if self.thread and self.thread.is_alive():
+            self.thread.join(timeout=1.0)  # Wait up to 1 second for thread to finish
+        
+        # Then quit the engine
+        try:
+            self.engine.quit()
+        except Exception as e:
+            if logging_enabled:
+                logging.error(f"Error quitting engine for {self.name}: {e}")
+        
         if logging_enabled:
             logging.debug(f"Engine for {self.name} has quit")
 
@@ -213,12 +230,32 @@ def save_game_to_pgn(game, board, result):
     if logging_enabled:
         logging.debug(f"Game between {player1.name} and {player2.name} saved to PGN")
 
+# Calculate optimal number of boards based on CPU cores
+def calculate_optimal_boards():
+    """Calculate optimal number of boards based on system resources"""
+    cpu_count = multiprocessing.cpu_count()
+    
+    # Use exactly the number of CPU cores, with a reasonable minimum and maximum
+    if cpu_count <= 2:
+        return 4  # Minimum for small systems
+    elif cpu_count <= 4:
+        return cpu_count
+    elif cpu_count <= 8:
+        return cpu_count
+    elif cpu_count <= 16:
+        return cpu_count
+    else:
+        return 16  # Maximum for very high core count systems
+
 # Load player profiles once during initialization
 player_profiles = load_player_profiles('./.venv/bin/stockfish')
 player_keys = list(player_profiles.keys())
-NUM_BOARDS = 24
+NUM_BOARDS = calculate_optimal_boards()
 games = []
 boards = {i: {"board": chess.Board(), "games": []} for i in range(1, NUM_BOARDS + 1)}
+
+if logging_enabled:
+    logging.debug(f"System has {multiprocessing.cpu_count()} CPU cores, using {NUM_BOARDS} boards")
 
 game_lock = threading.Lock()
 
@@ -237,13 +274,13 @@ def create_game(player1, player2, board_id):
     player_profiles[player1].add_game(game, chess.WHITE)
     player_profiles[player2].add_game(game, chess.BLACK)
 
-    if not hasattr(player_profiles[player1], 'thread_started'):
-        threading.Thread(target=player_profiles[player1].play_games, daemon=True).start()
-        player_profiles[player1].thread_started = True
+    if not player_profiles[player1].thread or not player_profiles[player1].thread.is_alive():
+        player_profiles[player1].thread = threading.Thread(target=player_profiles[player1].play_games, daemon=True)
+        player_profiles[player1].thread.start()
 
-    if not hasattr(player_profiles[player2], 'thread_started'):
-        threading.Thread(target=player_profiles[player2].play_games, daemon=True).start()
-        player_profiles[player2].thread_started = True
+    if not player_profiles[player2].thread or not player_profiles[player2].thread.is_alive():
+        player_profiles[player2].thread = threading.Thread(target=player_profiles[player2].play_games, daemon=True)
+        player_profiles[player2].thread.start()
 
     if logging_enabled:
         logging.debug(f"Game created on board {board_id} between {player1} and {player2}")
@@ -275,6 +312,11 @@ def start_game(board_id):
     player1, player2 = random.sample(player_keys, 2)
 
     with game_lock:
+        # Clean up existing games on this board
+        for game in boards[board_id]["games"]:
+            game["player1"].remove_game(game)
+            game["player2"].remove_game(game)
+        
         boards[board_id]["board"].reset()
         boards[board_id]["games"].clear()
         create_game(player1, player2, board_id)
@@ -318,11 +360,15 @@ def get_board(board_id):
 
 @app.route('/stop_games', methods=['POST'])
 def stop_games():
+    # Stop all player threads and engines
+    for profile in player_profiles.values():
+        profile.quit()
+    
+    # Clear all games and boards
     for board_data in boards.values():
-        for game in board_data["games"]:
-            game["player1"].quit()
-            game["player2"].quit()
-    boards.clear()
+        board_data["games"].clear()
+        board_data["board"].reset()
+    
     games.clear()
     if logging_enabled:
         logging.debug("All games stopped")
@@ -332,6 +378,16 @@ def stop_games():
 def get_profiles():
     profiles = {name: profile.to_dict() for name, profile in player_profiles.items()}
     return jsonify(profiles)
+
+@app.route('/get_system_info', methods=['GET'])
+def get_system_info():
+    """Get system information including optimal board count"""
+    return jsonify({
+        "cpu_cores": multiprocessing.cpu_count(),
+        "num_boards": NUM_BOARDS,
+        "total_memory_gb": round(psutil.virtual_memory().total / (1024**3), 2),
+        "available_memory_gb": round(psutil.virtual_memory().available / (1024**3), 2)
+    })
 
 @app.route('/img/profile_imgs/<filename>')
 def profile_image(filename):
@@ -362,6 +418,22 @@ def cpu_usage():
 def index():
     boards_info = [{"board_id": board_id, "games": board_data["games"]} for board_id, board_data in boards.items()]
     return render_template('index.html', boards=boards_info)
+
+def cleanup_on_shutdown():
+    """Clean up all resources when the application shuts down"""
+    if logging_enabled:
+        logging.debug("Shutting down application, cleaning up resources...")
+    
+    # Stop all player threads and engines
+    for profile in player_profiles.values():
+        profile.quit()
+    
+    if logging_enabled:
+        logging.debug("Application shutdown complete")
+
+# Register cleanup function
+import atexit
+atexit.register(cleanup_on_shutdown)
 
 if __name__ == '__main__':
     app.run(port=5000)

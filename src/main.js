@@ -151,7 +151,18 @@ app.on('window-all-closed', function () {
 
 app.on('quit', () => {
   stopFlaskServer();
-  clearInterval(memoryCheckInterval);
+  if (memoryCheckInterval) {
+    clearInterval(memoryCheckInterval);
+    memoryCheckInterval = null;
+  }
+});
+
+app.on('will-quit', () => {
+  // Ensure cleanup happens before quit
+  if (memoryCheckInterval) {
+    clearInterval(memoryCheckInterval);
+    memoryCheckInterval = null;
+  }
 });
 
 app.on('activate', function () {

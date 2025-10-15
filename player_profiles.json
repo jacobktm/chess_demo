@@ -3,256 +3,371 @@
         "name": "Sir Checkmate The Bold",
         "elo": 1200,
         "profile_image": "Sir_Checkmate_The_Bold.png",
-        "time": 0.25,
         "uci_elo": 2000,
-        "depth": 15
+        "time": 0.25,
+        "depth": 15,
+        "opponents": {}
     },
     "Lady Gambit The Clever": {
         "name": "Lady Gambit The Clever",
         "elo": 1200,
         "profile_image": "Lady_Gambit_The_Clever.png",
-        "time": 0.2,
         "uci_elo": 1800,
-        "depth": 12
+        "time": 0.2,
+        "depth": 12,
+        "opponents": {}
     },
     "Baron Rookslide The Swift": {
         "name": "Baron Rookslide The Swift",
         "elo": 1200,
         "profile_image": "Baron_Rookslide_The_Swift.png",
-        "time": 0.15,
         "uci_elo": 1600,
-        "depth": 10
+        "time": 0.15,
+        "depth": 10,
+        "opponents": {}
     },
     "Duchess Pawnmaster The Wise": {
         "name": "Duchess Pawnmaster The Wise",
         "elo": 1200,
         "profile_image": "Duchess_Pawnmaster_The_Wise.png",
-        "time": 0.1,
         "uci_elo": 1400,
-        "depth": 8
+        "time": 0.1,
+        "depth": 8,
+        "opponents": {}
     },
     "Count Forkula the Strategic": {
         "name": "Count Forkula the Strategic",
-        "elo": 1200,
+        "elo": 1186,
         "profile_image": "Count_Forkula_The_Strategic.png",
-        "time": 0.3,
         "uci_elo": 2200,
-        "depth": 20
+        "time": 0.3,
+        "depth": 20,
+        "opponents": {
+            "Countess Strategia": {
+                "games_played": 1
+            }
+        }
     },
     "Countess En Passant the Swift": {
         "name": "Countess En Passant the Swift",
-        "elo": 1200,
+        "elo": 1215,
         "profile_image": "Countess_En_Passant_The_Swift.png",
-        "time": 0.32,
         "uci_elo": 2250,
-        "depth": 22
+        "time": 0.32,
+        "depth": 22,
+        "opponents": {
+            "Duke Tactico": {
+                "games_played": 1
+            }
+        }
     },
     "Professor Whimsy Checkmate": {
         "name": "Professor Whimsy Checkmate",
-        "elo": 1200,
+        "elo": 1199,
         "profile_image": "Professor_Whimsy_Checkmate.png",
-        "time": 0.19,
         "uci_elo": 1520,
-        "depth": 11
+        "time": 0.19,
+        "depth": 11,
+        "opponents": {
+            "Countess Castella": {
+                "games_played": 1
+            },
+            "Duke Tactico": {
+                "games_played": 1
+            }
+        }
     },
     "Sir Jester Pawnsworth": {
         "name": "Sir Jester Pawnsworth",
         "elo": 1200,
         "profile_image": "Sir_Jester_Pawnsworth.png",
-        "time": 0.12,
         "uci_elo": 1416,
-        "depth": 9
+        "time": 0.12,
+        "depth": 9,
+        "opponents": {}
     },
     "Duchess Gambit Von Puzzler": {
         "name": "Duchess Gambit Von Puzzler",
-        "elo": 1200,
+        "elo": 1215,
         "profile_image": "Duchess_Gambit_Von_Puzzler.png",
-        "time": 0.22,
         "uci_elo": 1840,
-        "depth": 14
+        "time": 0.22,
+        "depth": 14,
+        "opponents": {}
     },
     "Baron Rookington": {
         "name": "Baron Rookington",
         "elo": 1200,
         "profile_image": "Baron_Rookington.png",
-        "time": 0.08,
         "uci_elo": 1320,
-        "depth": 7
+        "time": 0.08,
+        "depth": 7,
+        "opponents": {}
     },
     "Maestro Checkelini": {
         "name": "Maestro Checkelini",
         "elo": 1200,
         "profile_image": "Maestro_Checkelini.png",
-        "time": 0.24,
         "uci_elo": 2014,
-        "depth": 16
+        "time": 0.24,
+        "depth": 16,
+        "opponents": {}
     },
     "Captain Knightly": {
         "name": "Captain Knightly",
-        "elo": 1200,
+        "elo": 1215,
         "profile_image": "Captain_Knightly.png",
-        "time": 0.29,
         "uci_elo": 2190,
-        "depth": 19
+        "time": 0.29,
+        "depth": 19,
+        "opponents": {
+            "Sir Shieldsworth": {
+                "games_played": 1
+            }
+        }
     },
     "Enigma Bishop": {
         "name": "Enigma Bishop",
-        "elo": 1200,
+        "elo": 1199,
         "profile_image": "Enigma_Bishop.png",
-        "time": 0.11,
         "uci_elo": 1412,
-        "depth": 9
+        "time": 0.11,
+        "depth": 9,
+        "opponents": {
+            "Countess Epaulette": {
+                "games_played": 1
+            },
+            "Lady Knightingale": {
+                "games_played": 1
+            }
+        }
     },
     "Sage Pawnwise": {
         "name": "Sage Pawnwise",
-        "elo": 1200,
+        "elo": 1186,
         "profile_image": "Sage_Pawnwise.png",
-        "time": 0.36,
         "uci_elo": 2500,
-        "depth": 24
+        "time": 0.36,
+        "depth": 24,
+        "opponents": {
+            "Maestro Capablanca": {
+                "games_played": 1
+            }
+        }
     },
     "Lord Checkersworth": {
         "name": "Lord Checkersworth",
         "elo": 1200,
         "profile_image": "Lord_Checkersworth.png",
-        "time": 0.45,
         "uci_elo": 2700,
-        "depth": 25
+        "time": 0.45,
+        "depth": 25,
+        "opponents": {}
     },
     "Lady Knightingale": {
         "name": "Lady Knightingale",
-        "elo": 1200,
+        "elo": 1202,
         "profile_image": "Lady_Knightingale.png",
-        "time": 0.35,
         "uci_elo": 2900,
-        "depth": 23
+        "time": 0.35,
+        "depth": 23,
+        "opponents": {
+            "Princess Checkersina": {
+                "games_played": 1
+            },
+            "Enigma Bishop": {
+                "games_played": 1
+            }
+        }
     },
     "Grandmaster Mischief": {
         "name": "Grandmaster Mischief",
-        "elo": 1200,
+        "elo": 1186,
         "profile_image": "Grandmaster_Mischief.png",
-        "time": 0.25,
         "uci_elo": 2500,
-        "depth": 21
+        "time": 0.25,
+        "depth": 21,
+        "opponents": {
+            "Sir Blitz Alot": {
+                "games_played": 1
+            }
+        }
     },
     "Countess Castella": {
         "name": "Countess Castella",
-        "elo": 1200,
+        "elo": 1186,
         "profile_image": "Countess_Castella.png",
-        "time": 0.4,
         "uci_elo": 3100,
-        "depth": 25
+        "time": 0.4,
+        "depth": 25,
+        "opponents": {
+            "Professor Whimsy Checkmate": {
+                "games_played": 1
+            }
+        }
     },
     "Sir Pawnalot": {
         "name": "Sir Pawnalot",
         "elo": 1200,
         "profile_image": "Sir_Pawnalot.png",
-        "time": 0.3,
         "uci_elo": 2100,
-        "depth": 18
+        "time": 0.3,
+        "depth": 18,
+        "opponents": {}
     },
     "Wizard Chessington": {
         "name": "Wizard Chessington",
-        "elo": 1200,
+        "elo": 1186,
         "profile_image": "Wizard_Chessington.png",
-        "time": 0.37,
         "uci_elo": 2800,
-        "depth": 23
+        "time": 0.37,
+        "depth": 23,
+        "opponents": {
+            "Princess Checkersina": {
+                "games_played": 1
+            }
+        }
     },
     "Duke Tactico": {
         "name": "Duke Tactico",
-        "elo": 1200,
+        "elo": 1202,
         "profile_image": "Duke_Tactico.png",
-        "time": 0.33,
         "uci_elo": 2950,
-        "depth": 24
+        "time": 0.33,
+        "depth": 24,
+        "opponents": {
+            "Countess En Passant the Swift": {
+                "games_played": 1
+            },
+            "Professor Whimsy Checkmate": {
+                "games_played": 1
+            }
+        }
     },
     "Sir Blitz Alot": {
         "name": "Sir Blitz Alot",
-        "elo": 1200,
+        "elo": 1215,
         "profile_image": "Sir_Blitz_Alot.png",
-        "time": 0.2,
         "uci_elo": 2750,
-        "depth": 20
+        "time": 0.2,
+        "depth": 20,
+        "opponents": {
+            "Grandmaster Mischief": {
+                "games_played": 1
+            }
+        }
     },
     "Countess Strategia": {
         "name": "Countess Strategia",
-        "elo": 1200,
+        "elo": 1215,
         "profile_image": "Countess_Strategia.png",
-        "time": 0.41,
         "uci_elo": 3100,
-        "depth": 25
+        "time": 0.41,
+        "depth": 25,
+        "opponents": {
+            "Count Forkula the Strategic": {
+                "games_played": 1
+            }
+        }
     },
     "Maestro Capablanca": {
         "name": "Maestro Capablanca",
-        "elo": 1200,
+        "elo": 1215,
         "profile_image": "Maestro_Capablanca.png",
-        "time": 0.37,
         "uci_elo": 2800,
-        "depth": 22
+        "time": 0.37,
+        "depth": 22,
+        "opponents": {
+            "Sage Pawnwise": {
+                "games_played": 1
+            }
+        }
     },
     "Viscount Gambito": {
         "name": "Viscount Gambito",
         "elo": 1200,
         "profile_image": "Viscount_Gambito.png",
-        "time": 0.27,
         "uci_elo": 2300,
-        "depth": 17
+        "time": 0.27,
+        "depth": 17,
+        "opponents": {}
     },
     "Lady Enigma": {
         "name": "Lady Enigma",
         "elo": 1200,
         "profile_image": "Lady_Enigma.png",
-        "time": 0.3,
         "uci_elo": 2400,
-        "depth": 18
+        "time": 0.3,
+        "depth": 18,
+        "opponents": {}
     },
     "Sir Shieldsworth": {
         "name": "Sir Shieldsworth",
-        "elo": 1200,
+        "elo": 1201,
         "profile_image": "Sir_Shieldsworth.png",
-        "time": 0.28,
         "uci_elo": 2200,
-        "depth": 19
+        "time": 0.28,
+        "depth": 19,
+        "opponents": {
+            "Captain Knightly": {
+                "games_played": 1
+            }
+        }
     },
     "Baroness Checkmate": {
         "name": "Baroness Checkmate",
-        "elo": 1200,
+        "elo": 1172,
         "profile_image": "Baroness_Checkmate.png",
-        "time": 0.35,
         "uci_elo": 2600,
-        "depth": 21
+        "time": 0.35,
+        "depth": 21,
+        "opponents": {}
     },
     "Master Trickster": {
         "name": "Master Trickster",
         "elo": 1200,
         "profile_image": "Master_Trickster.png",
-        "time": 0.22,
         "uci_elo": 2100,
-        "depth": 16
+        "time": 0.22,
+        "depth": 16,
+        "opponents": {}
     },
     "Countess Epaulette": {
         "name": "Countess Epaulette",
-        "elo": 1200,
+        "elo": 1186,
         "profile_image": "Countess_Epaulette.png",
-        "time": 0.32,
         "uci_elo": 2500,
-        "depth": 20
+        "time": 0.32,
+        "depth": 20,
+        "opponents": {
+            "Enigma Bishop": {
+                "games_played": 1
+            }
+        }
     },
     "Duke of Disguise": {
         "name": "Duke of Disguise",
         "elo": 1200,
         "profile_image": "Duke_Of_Disguise.png",
-        "time": 0.29,
         "uci_elo": 2350,
-        "depth": 17
+        "time": 0.29,
+        "depth": 17,
+        "opponents": {}
     },
     "Princess Checkersina": {
         "name": "Princess Checkersina",
-        "elo": 1200,
+        "elo": 1229,
         "profile_image": "Princess_Checkersina.png",
-        "time": 0.34,
         "uci_elo": 2450,
-        "depth": 19
+        "time": 0.34,
+        "depth": 19,
+        "opponents": {
+            "Wizard Chessington": {
+                "games_played": 1
+            },
+            "Lady Knightingale": {
+                "games_played": 1
+            }
+        }
     }
 }
