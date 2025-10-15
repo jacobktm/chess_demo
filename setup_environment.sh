@@ -57,20 +57,39 @@ else
     ./setup_stockfish.sh
 fi
 
-# 4. Set up Node.js (if needed)
+# 4. Set up Node.js
 echo ""
-echo "📦 Checking Node.js setup..."
-if command_exists node && command_exists npm; then
-    echo "✅ Node.js and npm are available"
-    if [ -f "package.json" ]; then
-        echo "📦 Installing Node.js dependencies..."
-        npm install
-        echo "✅ Node.js dependencies installed"
-    fi
+echo "📦 Setting up Node.js..."
+
+# Check if nvm is installed
+if [ -d "$HOME/.nvm" ]; then
+    echo "✅ NVM found, loading it..."
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 else
-    echo "⚠️  Node.js not found. You may need to install it manually."
-    echo "   For Ubuntu/Debian: sudo apt install nodejs npm"
-    echo "   Or use nvm: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash"
+    echo "📥 Installing NVM (Node Version Manager)..."
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+    
+    # Load nvm in current session
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+fi
+
+# Install and use latest LTS Node.js
+echo "📦 Installing Node.js LTS..."
+nvm install --lts
+nvm use --lts
+nvm alias default lts/*
+
+# Install Node.js dependencies
+if [ -f "package.json" ]; then
+    echo "📦 Installing Node.js dependencies..."
+    npm install
+    echo "✅ Node.js dependencies installed"
+else
+    echo "⚠️  Warning: package.json not found"
 fi
 
 # 5. Verify setup
@@ -106,15 +125,19 @@ echo ""
 echo "🎉 Environment setup completed successfully!"
 echo ""
 echo "📋 Next steps:"
+echo "   1. Start the chess demo with the startup script:"
+echo "      ./start_app.sh"
+echo ""
+echo "   Or manually:"
 echo "   1. Activate the virtual environment:"
 echo "      source .venv/bin/activate"
 echo ""
-echo "   2. Start the chess demo:"
-echo "      python app.py"
-echo ""
-echo "   3. Or start with Electron (if Node.js is installed):"
-echo "      npm start"
+echo "   2. Start with Electron:"
+echo "      export NVM_DIR=\"\$HOME/.nvm\" && [ -s \"\$NVM_DIR/nvm.sh\" ] && \\. \"\$NVM_DIR/nvm.sh\" && npm start"
 echo ""
 echo "📍 Stockfish location: .venv/bin/stockfish"
 echo "📍 Python environment: .venv/"
 echo "📍 Node.js dependencies: node_modules/"
+echo "📍 Node.js version: $(node --version 2>/dev/null || echo 'Not available in current session')"
+echo ""
+echo "💡 Pro tip: Run 'source ~/.bashrc' or restart your terminal to use nvm in new sessions"
